@@ -10,9 +10,9 @@ import org.http4s.implicits._
 import cats.implicits._
 import org.http4s.circe.CirceEntityCodec.circeEntityEncoder
 
-class SlowRestController[F[_] : Monad] {
+class SlowRestController {
 
-  def slowService: HttpRoutes[F] = HttpRoutes.of{
-    case GET -> Root / "slow" / chunk / total / time => Monad[F].pure("Ok")
+  def slowService: HttpRoutes[IO] = HttpRoutes.of{
+    case GET -> Root / "slow" / chunk / total / time => Ok()
   }
 }

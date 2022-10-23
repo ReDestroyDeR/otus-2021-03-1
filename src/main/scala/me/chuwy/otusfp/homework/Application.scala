@@ -12,20 +12,20 @@ import org.http4s.server.Router
 import scala.concurrent.ExecutionContext.global
 
 object Application extends IOApp.Simple {
-  def services[F[_]: Monad: Concurrent]: HttpRoutes[F] =
-    new CounterRestController[F].counterService <+> new SlowRestController[F].slowService
+  def services: HttpRoutes[IO] =
+    new CounterRestController().counterService <+> new SlowRestController().slowService
 
-  def httpApp[F[_]: Monad: Concurrent]: HttpApp[F] = Router(
-      "/" -> services[F]
+  def httpApp: HttpApp[IO] = Router(
+      "/" -> services
     ).orNotFound
 
-  def server[F[_]: Async] =
-    BlazeServerBuilder[F](global)
+  def server =
+    BlazeServerBuilder[IO](global)
       .bindHttp(8080, "localhost")
-      .withHttpApp(httpApp[F])
+      .withHttpApp(httpApp)
 
 
   override def run: IO[Unit] = for {
-    _ <- server[IO].allocated.foreverM
+    _ <- server.allocated.foreverM
   } yield ()
 }

@@ -1,6 +1,7 @@
 package me.chuwy.otusfp.homework
 
 import cats.Functor
+import cats.effect.IO
 import cats.effect.kernel.Concurrent
 import org.http4s.HttpRoutes
 import org.http4s.Uri.Path.Root
@@ -10,10 +11,10 @@ import cats.implicits._
 import org.http4s.circe.CirceEntityCodec.circeEntityEncoder
 import org.http4s.circe.CirceEntityCodec.circeEntityDecoder
 
-class CounterRestController[F[_] : Concurrent : Functor] {
-  val counterState: F[Counter[F]] = Counter[F]
+class CounterRestController {
+  val counterState: IO[Counter] = Counter
 
-  def counterService: HttpRoutes[F] = HttpRoutes.of {
-    case POST -> Root / "counter" => counterState.map(_.counter.getAndUpdate(_ + 1))
+  def counterService: HttpRoutes[IO] = HttpRoutes.of {
+    case POST -> Root / "counter" => Ok(counterState.map(_.counter.getAndUpdate(_ + 1)))
   }
 }
