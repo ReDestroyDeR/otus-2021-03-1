@@ -9,6 +9,6 @@ import org.http4s.dsl.io._
 
 class CounterRestController(counterState: Ref[IO, Int]) {
   def counterService: HttpRoutes[IO] = HttpRoutes.of {
-    case POST -> Root / "counter" => Ok(counterState.updateAndGet(_ + 1))
+    case POST -> Root / "counter" => Ok(counterState.updateAndGet(_ + 1).map(Counter(_)))
   }
 }
