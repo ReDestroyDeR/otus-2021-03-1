@@ -6,7 +6,7 @@ import io.circe.generic.semiauto._
 case class Counter(counter: Int) {
   def +(increment: Int): Counter = Counter(counter + increment)
 
-  def ++(): Counter = Counter(counter + 1)
+  def ++ : Counter = Counter(counter + 1)
 }
 
 object Counter {
@@ -14,7 +14,7 @@ object Counter {
 
   implicit class CounterSyntax(counter: Counter) {
     def +(increment: Int): Counter = counter + increment
-    def ++(): Counter = counter.++()
+    def ++ : Counter = counter.++
   }
 
   implicit val decoder: Decoder[Counter] = deriveDecoder[Counter]
